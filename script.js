@@ -9,7 +9,8 @@ var question = document.querySelector("#question-option")
 var currentQuestion = 0;
 var answerButton = document.querySelector(".answerButton");
 var beginTime = 60;
-var finalScore = 0;
+var saveButton = document.getElementById("saveScore");
+
 
 //creating array of questions
 var questions = [
@@ -118,6 +119,9 @@ function timer() {
             document.getElementById("timer").textContent = 0;
         }
         if (beginTime <= 0) clearInterval(startTimer);
+        if (beginTime <= 0) {
+            gameOver();
+        }
     }, 1000); 
 }
 
@@ -127,10 +131,22 @@ function gameOver() {
     $("#highscore").removeClass("hide");
     let finalScore = score;
     $("#finalScore").html(finalScore);
-
+    saveScore();
     //ty for playing, score, enter initials to go to list of high scores
     //use if timer=0 and questions done
 }
+
+function saveScore() {
+    saveButton.addEventListener("click", function() {
+        score.textContent = finalScore;
+      
+        localStorage.setItem("score", score);
+      });
+}
+
+//need to append score to high users board
+
+    
 
 
 
