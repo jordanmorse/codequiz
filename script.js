@@ -1,8 +1,5 @@
 //defining variables
-console.log("sos")
-
 var startButton = document.getElementById("begin");
-console.log(startButton)
 var scoreDiv = document.getElementById("score-increase");
 var score = 0;
 var question = document.querySelector("#question-option")
@@ -10,7 +7,9 @@ var currentQuestion = 0;
 var answerButton = document.querySelector(".answerButton");
 var beginTime = 60;
 var saveButton = document.getElementById("saveScore");
-
+var username = document.getElementById("username");
+var recentScore = JSON.parse(window.localStorage.getItem("recentScore")) || [];
+var newList = document.querySelector("#newList");
 
 //creating array of questions
 var questions = [
@@ -118,7 +117,8 @@ function timer() {
         } else {
             document.getElementById("timer").textContent = 0;
         }
-        if (beginTime <= 0) clearInterval(startTimer);
+        if (beginTime <= 0) {
+            clearInterval(startTimer); };
         if (beginTime <= 0) {
             gameOver();
         }
@@ -130,23 +130,42 @@ function gameOver() {
     $("#quiz").addClass("hide");
     $("#highscore").removeClass("hide");
     let finalScore = score;
-    $("#finalScore").html(finalScore);
-    saveScore();
-    //ty for playing, score, enter initials to go to list of high scores
-    //use if timer=0 and questions done
-}
-
-function saveScore() {
-    saveButton.addEventListener("click", function() {
-        score.textContent = finalScore;
-      
-        localStorage.setItem("score", score);
-      });
-}
-
-//need to append score to high users board
-
     
+    $("#finalScore").html(finalScore);
+}
+
+//saving score on the button click, hiding and unhiding highscore screens
+$("#saveScore").on("click", function() {
+    event.preventDefault();
+    $("#highscore").addClass("hide");
+    $("#high").removeClass("hide");
+    saveScore();
+});
+
+//saving the score to local storage in an object, sorting score big - small
+function saveScore() {
+    let user = $("#username").val();
+
+    var scoreList = {
+        score2: score,
+        user: user 
+    }
+    console.log(scoreList);
+    recentScore.push(scoreList);
+    recentScore.sort( (a, b) => b.score2 - a.score2);
+    window.localStorage.setItem("recentScore", JSON.stringify(recentScore));
+    window.location.href = "#high";
+    
+}
+
+/*create array of scores then adding them
+as list items to high score list*/
+    newList.innerHTML = recentScore.map( scoreList => {
+        return `<li>${scoreList.user}-${scoreList.score2}</li>`;
+    }).join("");
+    
+
+
 
 
 
